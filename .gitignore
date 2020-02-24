@@ -1,0 +1,3 @@
+.idea/*
+connect4/__pycache__/*
+python_connect4.egg-info/*
