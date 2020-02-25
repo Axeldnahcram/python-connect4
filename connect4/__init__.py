@@ -14,13 +14,9 @@ import pygame
 import numpy as np
 
 #Color = bool
-#COLORS = [WHITE, BLACK] = [True, False]
+COLORS = [WHITE, BLACK] = [True, False]
 #COLOR_NAMES = ["black", "white"]
 
-BLUE = (0,0,255)
-BLACK = (0,0,0)
-RED = (255,0,0)
-YELLOW = (255,255,0)
 
 class Piece:
     """A piece with type and color."""
@@ -57,19 +53,27 @@ class Piece:
 
 class Board:
     """A board with pieces"""
+    dict_piece = {WHITE:1, BLACK:2}
 
-    def __init__(self, size=6):
+    def __init__(self, size=6, board=None):
         self.size = size
         self.squares = np.zeros((self.size, self.size))
+        if board is not None:
+            self.squares = board
+        #### Les blancs commencent
+        self.turn = WHITE
+        self.piece = self.dict_piece[self.turn]
 
     def __repr__(self):
         return (f"""{self.squares}""")
 
-    def play(self, column, piece):
+    def play(self, column):
         """Play a coin in the column going from 0 to size - 1"""
         height = self.check_height(column)
         if height is not False:
-            self.squares[height, column] = piece
+            self.squares[height, column] = self.piece
+            self.turn = not self.turn
+            self.piece = self.dict_piece[self.turn]
 
     def check_height(self, column):
         col = self.squares[:, column]
@@ -128,37 +132,63 @@ class Board:
                     return True
         return False
 
+    def no_move(self):
+        list_move = self.get_moves()
+        if len(list_move)>0:
+            return False
+        else:
+            return True
 
-    def draw_board(self):
-        pygame.init()
+    def result(self):
+        player_w = self.check_win(1)
+        player_b = self.check_win(2)
+        if player_w:
+            return '1-0'
+        elif player_b:
+            return '0-1'
+        elif self.no_move():
+            return '1/2-1/2'
+        else:
+            return '*'
 
-        SQUARESIZE = 100
+    def push(self, mov):
+        self.past_squares = np.copy(self.squares)
+        self.play(mov)
 
-        width = self.size * SQUARESIZE
-        height = (self.size + 1) * SQUARESIZE
+    def pop(self):
+        self.squares = self.past_squares
 
-        size = (width, height)
 
-        RADIUS = int(SQUARESIZE / 2 - 5)
-
-        screen = pygame.display.set_mode(size)
-        myfont = pygame.font.SysFont("monospace", 75)
-
-        for c in range(self.size):
-            for r in range(self.size):
-                pygame.draw.rect(screen, BLUE, (c * SQUARESIZE, r * SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE))
-                pygame.draw.circle(screen, BLACK, (
-                int(c * SQUARESIZE + SQUARESIZE / 2), int(r * SQUARESIZE + SQUARESIZE + SQUARESIZE / 2)), RADIUS)
-
-        for c in range(self.size):
-            for r in range(self.size):
-                if self.squares[r][c] == 1:
-                    pygame.draw.circle(screen, RED, (
-                    int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)), RADIUS)
-                elif self.squares[r][c] == 2:
-                    pygame.draw.circle(screen, YELLOW, (
-                    int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)), RADIUS)
-        pygame.display.update()
+    # def draw_board(self):
+    #     pygame.init()
+    #
+    #     SQUARESIZE = 100
+    #
+    #     width = self.size * SQUARESIZE
+    #     height = (self.size + 1) * SQUARESIZE
+    #
+    #     size = (width, height)
+    #
+    #     RADIUS = int(SQUARESIZE / 2 - 5)
+    #
+    #     screen = pygame.display.set_mode(size)
+    #     myfont = pygame.font.SysFont("monospace", 75)
+    #
+    #     for c in range(self.size):
+    #         for r in range(self.size):
+    #             pygame.draw.rect(screen, BLUE, (c * SQUARESIZE, r * SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE))
+    #             pygame.draw.circle(screen, BLACK, (
+    #             int(c * SQUARESIZE + SQUARESIZE / 2), int(r * SQUARESIZE + SQUARESIZE + SQUARESIZE / 2)), RADIUS)
+    #
+    #     for c in range(self.size):
+    #         for r in range(self.size):
+    #             if self.squares[r][c] == 1:
+    #                 pygame.draw.circle(screen, RED, (
+    #                 int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)), RADIUS)
+    #             elif self.squares[r][c] == 2:
+    #                 pygame.draw.circle(screen, YELLOW, (
+    #                 int(c * SQUARESIZE + SQUARESIZE / 2), height - int(r * SQUARESIZE + SQUARESIZE / 2)), RADIUS)
+    #     pygame.display.update()
 
 
 
