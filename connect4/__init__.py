@@ -10,7 +10,7 @@ __email__ = "axel-marchand@hotmail.fr"
 
 __version__ = "0.0.1"
 
-import pygame
+#import pygame
 import numpy as np
 
 #Color = bool
@@ -95,41 +95,42 @@ class Board:
     def print_board(self):
         print(self.squares)
 
-    def check_win(self, player):
-        for c in range(self.size - 3):
-            for r in range(self.size):
-                if self.squares[r][c] == player and \
-                        self.squares[r][c + 1] == player and \
-                        self.squares[r][c + 2] == player and \
-                        self.squares[r][c + 3] == player:
-                    return True
+    def check_win(self):
+        for player in [1,2]:
+            for c in range(self.size - 3):
+                for r in range(self.size):
+                    if self.squares[r][c] == player and \
+                            self.squares[r][c + 1] == player and \
+                            self.squares[r][c + 2] == player and \
+                            self.squares[r][c + 3] == player:
+                        return True
 
-            # Check vertical locations for win
-        for c in range(self.size - 3):
-            for r in range(self.size):
-                if self.squares[r][c] == player and \
-                        self.squares[r+1][c] == player and \
-                        self.squares[r+2][c] == player and \
-                        self.squares[r+3][c] == player:
-                    return True
+                # Check vertical locations for win
+            for c in range(self.size):
+                for r in range(self.size - 3):
+                    if self.squares[r][c] == player and \
+                            self.squares[r+1][c] == player and \
+                            self.squares[r+2][c] == player and \
+                            self.squares[r+3][c] == player:
+                        return True
 
-            # Check positively sloped diaganals
-        for c in range(self.size - 3):
-            for r in range(self.size-3):
-                if self.squares[r][c] == player and \
-                        self.squares[r+1][c+1] == player and \
-                        self.squares[r+2][c+2] == player and \
-                        self.squares[r+3][c+3] == player:
-                    return True
+                # Check positively sloped diaganals
+            for c in range(self.size - 3):
+                for r in range(self.size-3):
+                    if self.squares[r][c] == player and \
+                            self.squares[r+1][c+1] == player and \
+                            self.squares[r+2][c+2] == player and \
+                            self.squares[r+3][c+3] == player:
+                        return True
 
-            # Check negatively sloped diaganals
-        for c in range(self.size - 3):
-            for r in range(3, self.size):
-                if self.squares[r][c] == player and \
-                        self.squares[r-1][c+1] == player and \
-                        self.squares[r-2][c+2] == player and \
-                        self.squares[r-3][c+3] == player:
-                    return True
+                # Check negatively sloped diaganals
+            for c in range(self.size - 3):
+                for r in range(3, self.size):
+                    if self.squares[r][c] == player and \
+                            self.squares[r-1][c+1] == player and \
+                            self.squares[r-2][c+2] == player and \
+                            self.squares[r-3][c+3] == player:
+                        return True
         return False
 
     def no_move(self):

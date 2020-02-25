@@ -6,13 +6,14 @@ Introduction
 ------------
 
 python-connect4 is a pure Python connect4 library with move generation, move
-validation. It is done in the context of reinforcement learning project.
+validation. It is done in the context of reinforcement learning project for our masters project.
+
 
 .. code:: python
 
     >>> import connect4
 
-    >>> board = connect.Board()
+    >>> board = connect4.Board()
 
 
 
